@@ -22,6 +22,7 @@ public class OpenGLESActivity extends Activity {
 		// WindowManager.LayoutParams.FLAG_FULLSCREEN); // (NEW)
 
 		mGLSurfaceView = new GLSurfaceView(this);
+		mGLSurfaceView.setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
 		if (detectOpenGLES20()) {
 			mGLSurfaceView.setEGLContextClientVersion(2);
 			mGLSurfaceView.setRenderer(new MyRenderer(this));

@@ -3,7 +3,7 @@ package com.jayway.gles20.renderer;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.jayway.opengles20.mesh.Mesh;
+import com.jayway.gles20.mesh.Mesh;
 
 public class MeshDB extends ArrayList<Mesh> {
 

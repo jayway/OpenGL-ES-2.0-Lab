@@ -1,4 +1,4 @@
-package com.jayway.opengles20.mesh;
+package com.jayway.gles20.mesh;
 
 import android.content.Context;
 

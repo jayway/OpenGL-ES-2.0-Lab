@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 
 import com.jayway.gles20.Camera;
 import com.jayway.gles20.material.shader.Shader;
-import com.jayway.opengles20.mesh.Mesh;
+import com.jayway.gles20.mesh.Mesh;
 
 public class ComponentRenderer extends CommonRenderer {
 
@@ -40,7 +40,7 @@ public class ComponentRenderer extends CommonRenderer {
 			Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0,
 					mCamera.mProjMatrix, 0, mPerInstanceParams.MVPMatrix, 0);
 			mShader.bindPerInstance(mPerInstanceParams);
-			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+			GLES20.glDrawArrays(mPerInstanceParams.drawMode, mPerInstanceParams.drawFirst, mPerInstanceParams.numberOfVertices);
 		}
 	}
 

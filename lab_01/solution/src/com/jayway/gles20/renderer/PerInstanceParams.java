@@ -12,5 +12,8 @@ public class PerInstanceParams {
 	public FloatBuffer uv;
 	public int uvDataOffset;
 	public float[] modelMatrix;
+	public int numberOfVertices;
+	public int drawMode;
+	public int drawFirst;
 
 }
