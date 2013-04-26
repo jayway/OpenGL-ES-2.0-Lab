@@ -1,12 +1,5 @@
 package com.jayway.opengles20.mesh;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.jayway.gles20.mesh.Mesh;
-import com.jayway.gles20.util.BufferUtil;
-import com.jayway.opengles20.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +7,12 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import com.jayway.gles20.mesh.Mesh;
+import com.jayway.gles20.util.BufferUtil;
+import com.jayway.opengles20.R;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Triangle extends Mesh {
 	
@@ -25,22 +24,16 @@ public class Triangle extends Mesh {
 	private final float[] mVerticesData = {
 			//  X,     Y,        Z,     U,     V
 			-1.0f, -0.5f,        0, -0.5f,  0.0f,
-			 1.0f, -0.5f,        0,  1.5f, -0.0f, 
+			 1.0f, -0.5f,        0,  1.5f, -0.0f,
 			 0.0f,	1.11803399f, 0,  0.5f,  1.61803399f };
 
 	public Triangle(Context context) {
 		super(context);
 
-		setVertexData(mVerticesData);
+        init(mVerticesData, VERTICES_DATA_STRIDE, VERTICES_DATA_POS_OFFSET, VERTICES_DATA_UV_OFFSET);
 
-		mPerInstanceParams.numberOfVertices = mVerticesData.length / VERTICES_DATA_STRIDE;
-		mPerInstanceParams.verticesDataOffset = VERTICES_DATA_POS_OFFSET;
-		mPerInstanceParams.uv = mPerInstanceParams.vertices;
-		mPerInstanceParams.uvDataOffset = VERTICES_DATA_UV_OFFSET;
-		mPerInstanceParams.stride = VERTICES_DATA_STRIDE_BYTES;
-		mPerInstanceParams.drawMode = GLES20.GL_TRIANGLES;
 		mPerInstanceParams.drawFirst = 0;
-		
+
 		// Texture
 		int[] textures = new int[1];
 		GLES20.glGenTextures(1, textures, 0);

@@ -2,50 +2,53 @@ package com.jayway.gles20.renderer;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-
 import com.jayway.gles20.Camera;
 import com.jayway.gles20.material.shader.Shader;
 import com.jayway.gles20.mesh.Mesh;
 
 public class ComponentRenderer extends CommonRenderer {
 
-	private Shader mShader;
-	
-	private PerFrameParams mPerFrameParams = new PerFrameParams();
-	private MeshDB mDatabase = new MeshDB();
-	private Camera mCamera;
+    private Shader mShader;
 
-	public ComponentRenderer() {
-		super();
-	}
+    private PerFrameParams mPerFrameParams = new PerFrameParams();
+    private MeshDB mDatabase = new MeshDB();
+    private Camera mCamera;
 
-	@Override
-	public void init(int width, int height, boolean contextLost) {
-		mShader = new Shader();
-		mCamera = new Camera(width, height);
-	}
+    public ComponentRenderer() {
+        super();
 
-	@Override
-	public void draw(boolean firstDraw) {
-		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+        //TODO Necessary or not?
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+    }
 
-		mCamera.bind(mPerFrameParams);
-		mShader.bindPerFrame(mPerFrameParams);
+    @Override
+    public void init(int width, int height, boolean contextLost) {
+        mShader = new Shader();
+        mCamera = new Camera(width, height);
+    }
 
-		for (Mesh mesh : mDatabase) {
-			mesh.bind();
-			PerInstanceParams mPerInstanceParams = mesh.getParam();
-			Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0,
-					mCamera.mVMatrix, 0, mPerInstanceParams.modelMatrix, 0);
-			Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0,
-					mCamera.mProjMatrix, 0, mPerInstanceParams.MVPMatrix, 0);
-			mShader.bindPerInstance(mPerInstanceParams);
-			GLES20.glDrawArrays(mPerInstanceParams.drawMode, mPerInstanceParams.drawFirst, mPerInstanceParams.numberOfVertices);
-		}
-	}
+    @Override
+    public void draw(boolean firstDraw) {
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-	public MeshDB getDatabase() {
-		return mDatabase;
-	}
+        mCamera.bind(mPerFrameParams);
+        mShader.bindPerFrame(mPerFrameParams);
 
+        for (Mesh mesh : mDatabase) {
+            mesh.bind();
+            PerInstanceParams mPerInstanceParams = mesh.getParam();
+
+            //Compute MVP Matrix
+            Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0, mCamera.mProjMatrix, 0, mCamera.mViewMatrix, 0);
+            //TODO if mPerInstanceParams.modelMatrix is Identity the below step can be optimized.
+            Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0, mPerInstanceParams.modelMatrix, 0, mPerInstanceParams.MVPMatrix, 0);
+
+            mShader.bindPerInstance(mPerInstanceParams);
+            GLES20.glDrawArrays(mPerInstanceParams.drawMode, mPerInstanceParams.drawFirst, mPerInstanceParams.numberOfVertices);
+        }
+    }
+
+    public MeshDB getDatabase() {
+        return mDatabase;
+    }
 }

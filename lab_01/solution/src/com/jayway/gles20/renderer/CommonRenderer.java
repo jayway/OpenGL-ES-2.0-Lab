@@ -1,12 +1,12 @@
 package com.jayway.gles20.renderer;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import com.jayway.gles20.util.Util;
-
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
+import com.jayway.gles20.util.Util;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 public abstract class CommonRenderer implements Renderer {
 
@@ -16,8 +16,10 @@ public abstract class CommonRenderer implements Renderer {
 	private int mHeight;
 	private long mLastTime;
 	private int mFPS;
+    private float[] mClearColor = {0, 0, 0, 1};
 
-	public CommonRenderer() {
+
+    public CommonRenderer() {
 		mFirstDraw = true;
 		mSurfaceCreated = false;
 		mWidth = -1;
@@ -34,7 +36,20 @@ public abstract class CommonRenderer implements Renderer {
 		mSurfaceCreated = true;
 		mWidth = -1;
 		mHeight = -1;
-	}
+
+        GLES20.glClearColor(mClearColor[0], mClearColor[1], mClearColor[2], mClearColor[3]);
+    }
+
+    /**
+     * Default clear code is black
+     * @param r red
+     * @param g green
+     * @param b black
+     * @param a alpha
+     */
+    public void setClearColor(float r, float g, float b, float a){
+        mClearColor = new float[]{r, g, b, a};
+    }
 
 	@Override
 	public void onSurfaceChanged(GL10 notUsed, int width, int height) {
