@@ -1,9 +1,17 @@
 package com.jayway.opengles20.mesh;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 import com.jayway.gles20.mesh.Mesh;
+import com.jayway.opengles20.R;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Square extends Mesh {
 
@@ -28,38 +36,38 @@ public class Square extends Mesh {
         init(mVerticesData, VERTICES_DATA_STRIDE, VERTICES_DATA_POS_OFFSET, VERTICES_DATA_UV_OFFSET);
 		mPerInstanceParams.drawFirst = 0;
 
-        setupTexture();
+        setupTexture(context);
 
         Matrix.setIdentityM(mMMatrix, 0);
 	}
 
-    private void setupTexture() {
-        //		// Texture
-//		int[] textures = new int[1];
-//		GLES20.glGenTextures(1, textures, 0);
-//
-//		mPerInstanceParams.textureId = textures[0];
-//		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mPerInstanceParams.textureId);
-//
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-//		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-//		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-//
-//		InputStream is = context.getResources().openRawResource(R.raw.robot);
-//		Bitmap bitmap;
-//		try {
-//			bitmap = BitmapFactory.decodeStream(is);
-//		} finally {
-//			try {
-//				is.close();
-//			} catch (IOException e) {
-//				// Ignore.
-//			}
-//		}
-//
-//		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-//		bitmap.recycle();
+    private void setupTexture(Context context) {
+        		// Texture
+		int[] textures = new int[1];
+		GLES20.glGenTextures(1, textures, 0);
+
+		mPerInstanceParams.textureId = textures[0];
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mPerInstanceParams.textureId);
+
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+
+		InputStream is = context.getResources().openRawResource(R.raw.robot);
+		Bitmap bitmap;
+		try {
+			bitmap = BitmapFactory.decodeStream(is);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				// Ignore.
+			}
+		}
+
+		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+		bitmap.recycle();
     }
 
     @Override

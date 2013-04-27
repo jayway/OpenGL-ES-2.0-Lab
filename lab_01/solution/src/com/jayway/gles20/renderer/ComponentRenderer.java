@@ -1,21 +1,26 @@
 package com.jayway.gles20.renderer;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import com.jayway.GeneralUtil;
 import com.jayway.gles20.Camera;
-import com.jayway.gles20.material.shader.Shader;
+import com.jayway.gles20.material.shader.SimpleTextureShader;
 import com.jayway.gles20.mesh.Mesh;
 
 public class ComponentRenderer extends CommonRenderer {
 
-    private Shader mShader;
+    private SimpleTextureShader mShader;
 
     private PerFrameParams mPerFrameParams = new PerFrameParams();
     private MeshDB mDatabase = new MeshDB();
     private Camera mCamera;
+    private Context mContext;
 
-    public ComponentRenderer() {
+    public ComponentRenderer(Context context) {
         super();
+        mContext = context;
+
 
         //TODO Necessary or not?
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -23,7 +28,9 @@ public class ComponentRenderer extends CommonRenderer {
 
     @Override
     public void init(int width, int height, boolean contextLost) {
-        mShader = new Shader();
+        String vShader = GeneralUtil.resourceToString(mContext.getAssets(), "shader/simple_texture.vs");
+        String fShader = GeneralUtil.resourceToString(mContext.getAssets(), "shader/simple_texture.fs");
+        mShader = new SimpleTextureShader(vShader, fShader);
         mCamera = new Camera(width, height);
     }
 
