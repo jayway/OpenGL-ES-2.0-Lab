@@ -1,19 +1,19 @@
 package com.jayway.gles20.material.shader;
 
+import com.jayway.gles20.qualifier.GLQualifier;
 import com.jayway.gles20.qualifier.Qualifier;
 import com.jayway.gles20.qualifier.QualifierFactory;
 import com.jayway.gles20.renderer.PerFrameParams;
 import com.jayway.gles20.renderer.PerInstanceParams;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract General shader class
  */
 public abstract class Shader {
     private static final String TAG = "Shader";
-
-    private static final String COLOR = "0.7, 0.6, 0.3";
 
     protected static int sActiveShader = 0;
 
@@ -28,13 +28,17 @@ public abstract class Shader {
 		mPerFrame.clear();
 		mPerInstance.clear();
 
-        collectQualifiers(ShaderUtil.getQualifierList(mProgram));
+
+        List<GLQualifier> glQualifiers = ShaderUtil.getAllQualifiers(mProgram);
+        collectQualifiers(glQualifiers);
+
+        //TODO number of samplers indicate how many textures will be used.. setup params accordingly?
     }
 
-    private void collectQualifiers(ArrayList<String> names) {
-        for (String name : names) {
-            Qualifier qualifier = QualifierFactory.create(mProgram, name);
-            if (qualifier.perFrame) {
+    private void collectQualifiers(List<GLQualifier> glQualifiers) {
+        for (GLQualifier glq : glQualifiers) {
+            Qualifier qualifier = QualifierFactory.create(mProgram, glq.name);
+            if (qualifier.isPerFrame) {
                 mPerFrame.add(qualifier);
             } else {
                 mPerInstance.add(qualifier);

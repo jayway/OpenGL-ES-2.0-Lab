@@ -1,7 +1,6 @@
 package com.jayway;
 
 import android.content.res.AssetManager;
-import android.opengl.GLES20;
 import android.util.Log;
 
 import java.io.Closeable;
@@ -39,26 +38,7 @@ public class GeneralUtil {
         return sb.toString();
     }
 
-    private static void closeQuietly(Closeable stream){
-        try {
-            stream.close();
-        } catch (IOException e) {
-
-        }
-
-    }
-
-    public static void printGLErrorInHex(String notice) {
-        int error = GLES20.glGetError(); 
-        if (error != 0) {
-            Log.e("OPENGL", notice + "\tError: " + Integer.toHexString(error));
-            
-            
-            //Log.e("OPENGL", );
-        }
-    }
-    
-    public static FloatBuffer createFloatBuffer(float[] array, int stride) {
+    public static FloatBuffer createFloatBuffer(float[] array) {
         ByteBuffer bb = ByteBuffer.allocateDirect(array.length * BYTES_PER_FLOAT);
         bb.order(ByteOrder.nativeOrder());
 
@@ -77,14 +57,21 @@ public class GeneralUtil {
         return fb;
     }
 
-    public static String resourceToString(AssetManager manager, String s) {
+    //TODO should throw IOException perhaps
+    public static String stringFromResource(AssetManager manager, String assetsPath) {
         try {
-            InputStream is = manager.open(s);
+            InputStream is = manager.open(assetsPath);
             return inputStreamToString(is);
         } catch (IOException e) {
-            //TODO logg
-            e.printStackTrace();
+            throw new RuntimeException("Failed to load string <" + assetsPath + "> from resource", e);
         }
-        return null;
+    }
+
+    public static void closeQuietly(Closeable stream){
+        try {
+            stream.close();
+        } catch (IOException e) {
+
+        }
     }
 }

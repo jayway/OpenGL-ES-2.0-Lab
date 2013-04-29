@@ -1,12 +1,33 @@
 package com.jayway.gles20.qualifier;
 
 public class Qualifier {
-	public static final int UNIFORM_MVP_MATRIX = 0;
-	public static final int ATTRIBUTE_POSITION = 1;
-	public static final int ATTRIBUTE_TEXTURE_COORDS = 2;
-	public static final int ATTRIBUTE_TEXTURE = 3;
+    public enum QualifierType {
+        UNIFORM_MVP_MATRIX,
+        ATTRIBUTE_POSITION,
+        ATTRIBUTE_TEXTURE_COORDINATE,
+        ATTRIBUTE_TEXTURE_0,
+    }
 
-	public int handle = 0;
-	public boolean perFrame = false;
-	public int type;
+
+    public final int handle;
+    public final String name;
+    public final boolean isPerFrame;
+    public final QualifierType type;
+
+    public Qualifier(int handle, QualifierType type, String name, boolean isPerFrame){
+        this.handle = handle;
+        this.type = type;
+        this.name = name;
+        this.isPerFrame = isPerFrame;
+    }
+
+    /** Copy Constructor */
+    public Qualifier(Qualifier qualifier){
+        this.name = qualifier.name;
+        this.handle = qualifier.handle;
+        this.type = qualifier.type;
+        this.isPerFrame = qualifier.isPerFrame;
+    }
 }
+
+

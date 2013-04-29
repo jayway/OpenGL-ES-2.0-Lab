@@ -39,7 +39,7 @@ public class SimpleTextureShader extends Shader{
     public void bindPerInstance(PerInstanceParams params) {
         for (Qualifier qualifier : mPerInstance) {
             switch (qualifier.type) {
-                case Qualifier.ATTRIBUTE_POSITION:
+                case ATTRIBUTE_POSITION:
                     params.vertices.position(params.verticesDataOffset);
                     GLES20.glVertexAttribPointer(qualifier.handle, 3,
                         GLES20.GL_FLOAT, false, params.stride, params.vertices);
@@ -49,17 +49,17 @@ public class SimpleTextureShader extends Shader{
                     GLESUtil.checkGlError("glEnableVertexAttribArray maPositionHandle");
 
                     break;
-                case Qualifier.UNIFORM_MVP_MATRIX:
+                case UNIFORM_MVP_MATRIX:
                     GLES20.glUniformMatrix4fv(qualifier.handle, 1, false, params.MVPMatrix, 0);
                     break;
-                case Qualifier.ATTRIBUTE_TEXTURE_COORDS:
+                case ATTRIBUTE_TEXTURE_COORDINATE:
                     params.uv.position(params.uvDataOffset);
                     GLES20.glVertexAttribPointer(qualifier.handle, 2, GLES20.GL_FLOAT, false, params.stride, params.uv);
                     GLESUtil.checkGlError("glVertexAttribPointer maTextureHandle");
                     GLES20.glEnableVertexAttribArray(qualifier.handle);
                     GLESUtil.checkGlError("glEnableVertexAttribArray maTextureHandle");
                     break;
-                case Qualifier.ATTRIBUTE_TEXTURE:
+                case ATTRIBUTE_TEXTURE_0:
                     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
                     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, params.textureId);
                     break;
