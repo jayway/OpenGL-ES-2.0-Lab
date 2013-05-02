@@ -6,12 +6,12 @@ package com.jayway.gles20.qualifier;
  */
 public class GLQualifier extends Qualifier{
     public final int glQualifierType;
-    public final int glType;
+    public final int glVariableType;
 
-    public GLQualifier(Qualifier qualifier,int glQualifierType, int glType) {
+    public GLQualifier(Qualifier qualifier,int glQualifierType, int glVariableType) {
         super(qualifier);
 
         this.glQualifierType = glQualifierType;
-        this.glType = glType;
+        this.glVariableType  = glVariableType;
     }
 }

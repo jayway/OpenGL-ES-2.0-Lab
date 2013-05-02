@@ -3,8 +3,10 @@ package com.jayway.gles20.texture;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import com.jayway.gles20.util.GLESUtil;
+
+import static android.opengl.GLES20.*;
 
 /**
  * User: Andreas Nilsson, Jayway
@@ -17,11 +19,11 @@ public class Texture {
     public final int textureId;
 
     public static class TexParams{
-        public int TEXTURE_TYPE = GLES20.GL_TEXTURE_2D;
-        public int MIN_FILTER = GLES20.GL_NEAREST;
-        public int MAX_FILTER = GLES20.GL_LINEAR;
-        public int WRAP_S     = GLES20.GL_REPEAT;
-        public int WRAP_T     = GLES20.GL_REPEAT;
+        public int TEXTURE_TYPE = GL_TEXTURE_2D;
+        public int MIN_FILTER   = GL_NEAREST;
+        public int MAX_FILTER   = GL_LINEAR;
+        public int WRAP_S       = GL_REPEAT;
+        public int WRAP_T       = GL_REPEAT;
     }
 
     public Texture(Context context, int resId,int texId, boolean doUploadToGPU){
@@ -54,14 +56,15 @@ public class Texture {
 
     public void uploadToGPU(TexParams params){
         //TODO verify texid and bitmap
-        GLES20.glBindTexture(params.TEXTURE_TYPE, textureId);
+        glBindTexture(params.TEXTURE_TYPE, textureId);
 
-        GLES20.glTexParameterf(params.TEXTURE_TYPE, GLES20.GL_TEXTURE_MIN_FILTER, params.MIN_FILTER);
-        GLES20.glTexParameterf(params.TEXTURE_TYPE, GLES20.GL_TEXTURE_MAG_FILTER, params.MAX_FILTER);
-        GLES20.glTexParameteri(params.TEXTURE_TYPE, GLES20.GL_TEXTURE_WRAP_S, params.WRAP_S);
-        GLES20.glTexParameteri(params.TEXTURE_TYPE, GLES20.GL_TEXTURE_WRAP_T, params.WRAP_T);
+        glTexParameterf(params.TEXTURE_TYPE, GL_TEXTURE_MIN_FILTER, params.MIN_FILTER);
+        glTexParameterf(params.TEXTURE_TYPE, GL_TEXTURE_MAG_FILTER, params.MAX_FILTER);
+        glTexParameteri(params.TEXTURE_TYPE, GL_TEXTURE_WRAP_S, params.WRAP_S);
+        glTexParameteri(params.TEXTURE_TYPE, GL_TEXTURE_WRAP_T, params.WRAP_T);
 
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
+        GLESUtil.checkGlError("texImage2D");
         bitmap.recycle();
     }
 

@@ -37,7 +37,7 @@ public abstract class CommonRenderer implements Renderer {
 		mWidth = -1;
 		mHeight = -1;
 
-        GLES20.glClearColor(mClearColor[0], mClearColor[1], mClearColor[2], mClearColor[3]);
+        setClearColor(0, 0,0,1);
     }
 
     /**
@@ -49,6 +49,7 @@ public abstract class CommonRenderer implements Renderer {
      */
     public void setClearColor(float r, float g, float b, float a){
         mClearColor = new float[]{r, g, b, a};
+        GLES20.glClearColor(mClearColor[0], mClearColor[1], mClearColor[2], mClearColor[3]);
     }
 
 	@Override

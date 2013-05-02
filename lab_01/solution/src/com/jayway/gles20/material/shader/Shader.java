@@ -1,12 +1,10 @@
 package com.jayway.gles20.material.shader;
 
-import com.jayway.gles20.qualifier.GLQualifier;
 import com.jayway.gles20.qualifier.Qualifier;
-import com.jayway.gles20.qualifier.QualifierFactory;
+import com.jayway.gles20.qualifier.QualifierUtil;
 import com.jayway.gles20.renderer.PerFrameParams;
 import com.jayway.gles20.renderer.PerInstanceParams;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,40 +13,42 @@ import java.util.List;
 public abstract class Shader {
     private static final String TAG = "Shader";
 
-    protected static int sActiveShader = 0;
+    public static int sActiveShader = 0;
 
-	protected int mProgram = 0;
-	protected ArrayList<Qualifier> mPerFrame = new ArrayList<Qualifier>();
-	protected ArrayList<Qualifier> mPerInstance = new ArrayList<Qualifier>();
+    private final List<? extends Qualifier> mQualifiers;
+    protected int mProgram = 0;
+    protected Qualifier mPerFrame[] = null;
+    protected Qualifier mPerInstance[] = null;
 
-	public Shader(String vertexShader, String fragmentShader) {
-        //TODO add these to member?
-		mProgram = createProgram(vertexShader, fragmentShader);
+    public Shader(String vertexShader, String fragmentShader) {
+        mProgram    = ShaderUtil.createProgram(vertexShader, fragmentShader);
+        mQualifiers = ShaderUtil.getAllQualifiers(mProgram);
 
-		mPerFrame.clear();
-		mPerInstance.clear();
-
-
-        List<GLQualifier> glQualifiers = ShaderUtil.getAllQualifiers(mProgram);
-        collectQualifiers(glQualifiers);
-
-        //TODO number of samplers indicate how many textures will be used.. setup params accordingly?
+        generateQualifierArrays();
     }
 
-    private void collectQualifiers(List<GLQualifier> glQualifiers) {
-        for (GLQualifier glq : glQualifiers) {
-            Qualifier qualifier = QualifierFactory.create(mProgram, glq.name);
-            if (qualifier.isPerFrame) {
-                mPerFrame.add(qualifier);
+    /**
+     * Generate arrays from the list of Qualifiers to enhance performance.
+     * This, since mPerFrame and mPerInstance is frequently accessed in the draw loop.
+     */
+    private void generateQualifierArrays() {
+        mPerFrame    = new Qualifier[QualifierUtil.countPerFrameQualifiers(mQualifiers)];
+        mPerInstance = new Qualifier[QualifierUtil.countPerInstanceQualifiers(mQualifiers)];
+
+        int perFrameCount    = 0;
+        int perInstanceCount = 0;
+        for (Qualifier q : mQualifiers) {
+            if (q.isPerFrame) {
+                mPerFrame[perFrameCount++] = q;
             } else {
-                mPerInstance.add(qualifier);
+                mPerInstance[perInstanceCount++] = q;
             }
         }
     }
 
-	private int createProgram(String vertexSource, String fragmentSource) {
-        return ShaderUtil.createProgram(vertexSource, fragmentSource);
-	}
+    public List<? extends Qualifier> getQualifiers(){
+        return mQualifiers;
+    }
 
     public abstract void bindPerFrame(PerFrameParams params);
 

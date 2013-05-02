@@ -9,7 +9,10 @@ import com.jayway.gles20.qualifier.QualifierFactory;
  */
 public class App extends Application{
 
-    public static String VERTEX_SHADER_SIMPLE_TEXTURE = null;
+    /**
+     * As long as shaders are loaded properly these should not appear null to the rest of the application.
+     */
+    public static String VERTEX_SHADER_SIMPLE_TEXTURE   = null;
     public static String FRAGMENT_SHADER_SIMPLE_TEXTURE = null;
 
     @Override

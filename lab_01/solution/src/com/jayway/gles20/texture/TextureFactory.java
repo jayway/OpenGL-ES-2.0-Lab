@@ -2,7 +2,7 @@ package com.jayway.gles20.texture;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.util.Log;
+import com.jayway.gles20.util.GLESUtil;
 
 /**
  * User: Andreas Nilsson, Jayway
@@ -15,36 +15,52 @@ public class TextureFactory {
     private int[] mTextures;
     private int mLastUsedTextureSlot;
 
+    /**
+     * Initiates factory with 1 texture unit.
+     * @param context
+     */
     public TextureFactory(Context context){
         this(context, 1);
     }
+
+    /**
+     * Initiates factory with n Texture units.
+     * @param context
+     */
     public TextureFactory(Context context, int nTextures){
         mContext = context;
         mTextures = new int[nTextures];
         mLastUsedTextureSlot = 0;
 
         GLES20.glGenTextures(nTextures, mTextures, 0);
+        GLESUtil.checkGlError("glGenTextures");
 
         //TODO generate texture slots.
     }
 
     /**
-     * @param resId texture id.
-     * @return
+     * Generates a {@link Texture} from provided {@code resId}.
+     * @param resId Resource id.
+     * @return texture id
      */
     public Texture fromResId(int resId){
-        int texId = getNextFreeTextureSlot();
+        int texId = getNextFreeTextureId();
         return new Texture(mContext, resId, texId, true);
     }
 
-    private int getNextFreeTextureSlot() {
-        if(mLastUsedTextureSlot == mTextures.length-1){
-            //TODO throw exception or create more id's?
-            Log.e(LOG_TAG, "no more texture slots available in texture factory");
-//            throw new IndexOutOfBoundsException("No more texture units available in factory");
-            return -1;
+    private int getNextFreeTextureId() {
+        if(mLastUsedTextureSlot == mTextures.length){
+            expand();
+            return getNextFreeTextureId();
         }else{
             return ++mLastUsedTextureSlot;
         }
+    }
+
+    /**
+     * Expands the texture factory with more texture units.
+     */
+    private void expand(){
+        throw  new RuntimeException("Not yet implemented");
     }
 }

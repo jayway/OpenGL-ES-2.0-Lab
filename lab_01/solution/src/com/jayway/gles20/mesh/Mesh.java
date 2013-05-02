@@ -2,22 +2,22 @@ package com.jayway.gles20.mesh;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import com.jayway.gles20.renderer.PerInstanceParams;
 import com.jayway.gles20.util.BufferUtil;
 
-// TODO Rework abstraction
-public class Mesh {
+public abstract class Mesh {
 
 	protected float[] mMMatrix = new float[16];
 
 	protected PerInstanceParams mPerInstanceParams = new PerInstanceParams();
 
     public Mesh(Context context) {
+        Matrix.setIdentityM(mMMatrix, 0);
     }
 
     protected void init(float[] vertexData, int vertexStride, int positionOffset, int uvOffset) {
         init(vertexData, null, vertexStride, positionOffset, uvOffset);
-        mPerInstanceParams.uv = mPerInstanceParams.vertices;
     }
 
     protected void init(float[] vertexData, float[] uvData, int vertexStride, int positionOffset, int uvOffset) {
@@ -29,14 +29,13 @@ public class Mesh {
 
         mPerInstanceParams.drawMode           = GLES20.GL_TRIANGLES;
 
-        //FIXME
+        //TODO how do we want to handle separate tex arrays.
+        // Should the array be able to be null or do we want the user to send reference to the same array twice.
         if(uvData != null){
             mPerInstanceParams.uv = BufferUtil.createFloatBuffer(uvData);
+        }else{
+            mPerInstanceParams.uv = mPerInstanceParams.vertices;
         }
-    }
-
-    public void bind() {
-
     }
 
     private void setVertexStride(int vertexStride) {
@@ -67,4 +66,6 @@ public class Mesh {
         mPerInstanceParams.drawMode = drawMode;
     }
 
+    /** Bind all per instance and per frame variables here. */
+    public abstract void bind();
 }

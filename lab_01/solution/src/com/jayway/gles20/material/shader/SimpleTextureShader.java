@@ -1,10 +1,11 @@
 package com.jayway.gles20.material.shader;
 
-import android.opengl.GLES20;
 import com.jayway.gles20.qualifier.Qualifier;
 import com.jayway.gles20.renderer.PerFrameParams;
 import com.jayway.gles20.renderer.PerInstanceParams;
 import com.jayway.gles20.util.GLESUtil;
+
+import static android.opengl.GLES20.*;
 
 /**
  * Simple basic shader who only renders with a solid COLOR.
@@ -15,16 +16,19 @@ public class SimpleTextureShader extends Shader{
     public SimpleTextureShader(String vertexShader, String fragmentShader) {
         super(vertexShader, fragmentShader);
 
-        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+        //Set GL States
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glDepthFunc(GL_LEQUAL);
+        GLESUtil.checkGlError("SimpleTextureShader >> set gl states");
     }
-
 
     @Override
     public void bindPerFrame(PerFrameParams params) {
         if (mProgram == sActiveShader) {
             return;
         }
-        GLES20.glUseProgram(mProgram);
+        glUseProgram(mProgram);
         GLESUtil.checkGlError("glUseProgram");
 
         for (Qualifier qualifier : mPerFrame) {
@@ -41,27 +45,25 @@ public class SimpleTextureShader extends Shader{
             switch (qualifier.type) {
                 case ATTRIBUTE_POSITION:
                     params.vertices.position(params.verticesDataOffset);
-                    GLES20.glVertexAttribPointer(qualifier.handle, 3,
-                        GLES20.GL_FLOAT, false, params.stride, params.vertices);
+                    glVertexAttribPointer(qualifier.handle, 3, GL_FLOAT, false, params.stride, params.vertices);
                     GLESUtil.checkGlError("glVertexAttribPointer maPosition");
 
-                    GLES20.glEnableVertexAttribArray(qualifier.handle);
+                    glEnableVertexAttribArray(qualifier.handle);
                     GLESUtil.checkGlError("glEnableVertexAttribArray maPositionHandle");
-
                     break;
                 case UNIFORM_MVP_MATRIX:
-                    GLES20.glUniformMatrix4fv(qualifier.handle, 1, false, params.MVPMatrix, 0);
+                    glUniformMatrix4fv(qualifier.handle, 1, false, params.MVPMatrix, 0);
                     break;
                 case ATTRIBUTE_TEXTURE_COORDINATE:
                     params.uv.position(params.uvDataOffset);
-                    GLES20.glVertexAttribPointer(qualifier.handle, 2, GLES20.GL_FLOAT, false, params.stride, params.uv);
-                    GLESUtil.checkGlError("glVertexAttribPointer maTextureHandle");
-                    GLES20.glEnableVertexAttribArray(qualifier.handle);
-                    GLESUtil.checkGlError("glEnableVertexAttribArray maTextureHandle");
+                    glVertexAttribPointer(qualifier.handle, 2, GL_FLOAT, false, params.stride, params.vertices);
+                    GLESUtil.checkGlError("glVertexAttribPointer mTextureHandle");
+                    glEnableVertexAttribArray(qualifier.handle);
+                    GLESUtil.checkGlError("glEnableVertexAttribArray mTextureHandle");
                     break;
-                case ATTRIBUTE_TEXTURE_0:
-                    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, params.textureId);
+                case UNIFORM_TEXTURE_0:
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, params.textureId);
                     break;
                 default:
                     break;

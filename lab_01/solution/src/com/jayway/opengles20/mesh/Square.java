@@ -33,15 +33,12 @@ public class Square extends Mesh {
 		mPerInstanceParams.drawFirst = 0;
 
         setupTextures(context);
-
-        Matrix.setIdentityM(mMMatrix, 0);
 	}
 
     private void setupTextures(Context context) {
         //TODO Might want this as a singleton in application
         TextureFactory tf = new TextureFactory(context);
         mTexture = tf.fromResId(R.raw.robot);
-        mPerInstanceParams.textureId = mTexture.textureId;
     }
 
     @Override
