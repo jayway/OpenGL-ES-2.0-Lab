@@ -26,8 +26,8 @@ public abstract class Mesh {
         mPerInstanceParams.stride             = vertexStride * BufferUtil.FLOAT_SIZE_BYTES;
         mPerInstanceParams.verticesDataOffset = positionOffset;
         mPerInstanceParams.uvDataOffset       = uvOffset;
-        mPerInstanceParams.vertices = BufferUtil.createFloatBuffer(vertexData);
-        mPerInstanceParams.numberOfVertices = vertexData.length / vertexStride;
+        mPerInstanceParams.vertices           = BufferUtil.createFloatBuffer(vertexData);
+        mPerInstanceParams.numberOfVertices   = vertexData.length / vertexStride;
 
         mPerInstanceParams.drawMode = GLES20.GL_TRIANGLES;
 
@@ -52,7 +52,7 @@ public abstract class Mesh {
      */
 
     protected  void validateVertexData(float[] vertexData, int vertexStride) {
-        if (vertexData != null){
+        if (vertexData == null){
             //TODO Log instead? or swap with dummy model?
             throw new RuntimeException("Vertex data cannot be null");
         }
