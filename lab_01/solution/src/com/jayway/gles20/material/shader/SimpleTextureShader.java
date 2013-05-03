@@ -15,8 +15,10 @@ public class SimpleTextureShader extends Shader{
 
     public SimpleTextureShader(String vertexShader, String fragmentShader) {
         super(vertexShader, fragmentShader);
+    }
 
-        //Set GL States
+    @Override
+    protected void initGLStates() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glDepthFunc(GL_LEQUAL);

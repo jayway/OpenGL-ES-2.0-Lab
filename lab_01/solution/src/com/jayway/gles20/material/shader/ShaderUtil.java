@@ -19,14 +19,14 @@ public class ShaderUtil {
             + "attribute vec2 aTextureCoord;\n"
 			+ "varying vec2 vTextureCoord;\n"
             + "void main() {\n"
-			+ "  gl_Position = uMVPMatrix * aPosition;\n"
+			+ "  gl_Position = aPosition * uMVPMatrix;\n"
 			+ "  vTextureCoord = aTextureCoord;\n"
             + "}\n";
 
 	private final static String mFragmentShader =
               "precision mediump float;\n"
 			+ "varying vec2 vTextureCoord;\n"
-            + "uniform sampler2D sTexture;\n"
+            + "uniform sampler2D uTexture0;\n"
 			+ "void main() {\n"
 			+ "  gl_FragColor = texture2D(sTexture, vTextureCoord);\n"
             + "}\n";
@@ -122,7 +122,7 @@ public class ShaderUtil {
             glGetProgramiv(program, maxLengthId, maxQualifierLengthContainer, 0);
 
             for (int i = 0; i < nQualifiers[0]; ++i) {
-                GLQualifier qualifier = getQualifier(program, typeId, i, maxQualifierLengthContainer[0]);
+                GLQualifier qualifier = createQualifier(program, typeId, i, maxQualifierLengthContainer[0]);
                 allQualifiers.add(qualifier);
             }
         }
@@ -131,21 +131,20 @@ public class ShaderUtil {
     }
 
     /**
-     * Accumulated data is updated in @param qualifierMeta, such as number of samplers.
+     * Creates a gl qualifier from the provided data.
+     * //TODO Push to QualifierFactory?
      *
-     *
-     *
-     * @param program
-     * @param glQualifierType
-     * @param qualifierId
-     * @param maxQualifierLength
-     * @return
+     * @param program OpenGL shader program id
+     * @param glQualifierType type of gl qualifier e.g. {@link android.opengl.GLES20#GL_ACTIVE_ATTRIBUTES}, {@link android.opengl.GLES20#GL_ACTIVE_UNIFORMS}
+     * @param qualifierId The by OpenGL generated qualifier id, i.e location id.
+     * @param maxQualifierLength Max length of the qualifier with longest name.
+     * @return Created Qualifier
      */
-    private static GLQualifier getQualifier(final int program, final int glQualifierType, final int qualifierId, final int maxQualifierLength) {
-        byte[] NAME_CONTAINER    = new byte[maxQualifierLength];
-        int[] LENGTH_CONTAINER   = new int[1];
-        int[] SIZE_CONTAINER     = new int[1];
-        int[] TYPE_CONTAINER     = new int[1];
+    private static GLQualifier createQualifier(final int program, final int glQualifierType, final int qualifierId, final int maxQualifierLength) {
+        byte[] NAME_CONTAINER  = new byte[maxQualifierLength];
+        int[] LENGTH_CONTAINER = new int[1];
+        int[] SIZE_CONTAINER   = new int[1];
+        int[] TYPE_CONTAINER   = new int[1];
 
         switch (glQualifierType){
             case GL_ACTIVE_UNIFORMS:

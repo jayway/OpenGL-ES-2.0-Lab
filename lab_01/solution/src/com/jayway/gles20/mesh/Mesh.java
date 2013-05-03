@@ -21,13 +21,15 @@ public abstract class Mesh {
     }
 
     protected void init(float[] vertexData, float[] uvData, int vertexStride, int positionOffset, int uvOffset) {
+        validateVertexData(vertexData, vertexStride);
+
         mPerInstanceParams.stride             = vertexStride * BufferUtil.FLOAT_SIZE_BYTES;
         mPerInstanceParams.verticesDataOffset = positionOffset;
         mPerInstanceParams.uvDataOffset       = uvOffset;
         mPerInstanceParams.vertices = BufferUtil.createFloatBuffer(vertexData);
         mPerInstanceParams.numberOfVertices = vertexData.length / vertexStride;
 
-        mPerInstanceParams.drawMode           = GLES20.GL_TRIANGLES;
+        mPerInstanceParams.drawMode = GLES20.GL_TRIANGLES;
 
         //TODO how do we want to handle separate tex arrays.
         // Should the array be able to be null or do we want the user to send reference to the same array twice.
@@ -35,6 +37,28 @@ public abstract class Mesh {
             mPerInstanceParams.uv = BufferUtil.createFloatBuffer(uvData);
         }else{
             mPerInstanceParams.uv = mPerInstanceParams.vertices;
+        }
+    }
+
+    /**
+     * Criterias:
+     * vertexData != null
+     * Validates vertex stride != 0.
+     * ...
+     *
+     * @param vertexData
+     * @param vertexStride
+     * @throws RuntimeException
+     */
+
+    protected  void validateVertexData(float[] vertexData, int vertexStride) {
+        if (vertexData != null){
+            //TODO Log instead? or swap with dummy model?
+            throw new RuntimeException("Vertex data cannot be null");
+        }
+        if(vertexStride == 0){
+            //TODO Log instead? or swap with dummy model?
+            throw new RuntimeException("Stride was set to 0, application will terminate");
         }
     }
 
@@ -68,4 +92,5 @@ public abstract class Mesh {
 
     /** Bind all per instance and per frame variables here. */
     public abstract void bind();
+
 }

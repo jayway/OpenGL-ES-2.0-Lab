@@ -9,15 +9,17 @@ import com.jayway.gles20.mesh.Mesh;
 
 import static android.opengl.GLES20.*;
 
-
 public class ComponentRenderer extends CommonRenderer {
+
+    private Context mContext;
+
+    private MeshDB mDatabase = new MeshDB();
 
     private SimpleTextureShader mShader;
 
-    private PerFrameParams mPerFrameParams = new PerFrameParams();
-    private MeshDB mDatabase = new MeshDB();
     private Camera mCamera;
-    private Context mContext;
+
+    private PerFrameParams mPerFrameParams = new PerFrameParams();
 
     public ComponentRenderer(Context context) {
         super();
@@ -33,10 +35,8 @@ public class ComponentRenderer extends CommonRenderer {
         glEnable(GL_DEPTH_TEST);
     }
 
-    int[] tempInt = new int[8];
-
     @Override
-    public void draw(boolean firstDraw) {
+    public void draw(boolean isFirstDraw) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         mCamera.bind(mPerFrameParams);
@@ -55,7 +55,7 @@ public class ComponentRenderer extends CommonRenderer {
 
             //Draw Mesh.
             glDrawArrays(mPerInstanceParams.drawMode,
-                         mPerInstanceParams.drawFirst,
+                         mPerInstanceParams.firstVertexIndex,
                          mPerInstanceParams.numberOfVertices);
         }
     }

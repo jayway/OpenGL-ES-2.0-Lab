@@ -30,7 +30,7 @@ public class Square extends Mesh {
 		super(context);
 
         init(mVerticesData, VERTICES_DATA_STRIDE, VERTICES_DATA_POS_OFFSET, VERTICES_DATA_UV_OFFSET);
-		mPerInstanceParams.drawFirst = 0;
+		mPerInstanceParams.firstVertexIndex = 0;
 
         setupTextures(context);
 	}

@@ -2,11 +2,8 @@ package com.jayway.opengles20.mesh;
 
 import android.content.Context;
 import android.opengl.Matrix;
+import com.jayway.App;
 import com.jayway.gles20.mesh.Mesh;
-import com.jayway.gles20.texture.Texture;
-import com.jayway.gles20.texture.TextureFactory;
-import com.jayway.gles20.util.GLESUtil;
-import com.jayway.opengles20.R;
 
 /**
  * User: Andreas Nilsson, Jayway
@@ -47,11 +44,11 @@ public class Cube extends Mesh {
     };
 
     private final float[] mVertices = {
-        // v0 - v1 - v2
+        // v0-v1-v2
         V[0][X], V[0][Y], V[0][Z], 1f, 0f,
         V[1][X], V[1][Y], V[1][Z], 0f, 0f,
         V[2][X], V[2][Y], V[2][Z], 0f, 1f,
-        // v2 - v3 - v0
+        // v2-v3-v0
         V[2][X], V[2][Y], V[2][Z], 0f, 1f,
         V[3][X], V[3][Y], V[3][Z], 1f, 1f,
         V[0][X], V[0][Y], V[0][Z], 1f, 0f,
@@ -74,7 +71,7 @@ public class Cube extends Mesh {
         V[2][X], V[2][Y], V[2][Z], 1f, 1f,
         V[1][X], V[1][Y], V[1][Z], 1f, 0f,
 
-        // Top v0-v5-v6
+        // v0-v5-v6
         V[0][X], V[0][Y], V[0][Z], 1f, 1f,
         V[5][X], V[5][Y], V[5][Z], 1f, 0f,
         V[6][X], V[6][Y], V[6][Z], 0f, 0f,
@@ -111,27 +108,16 @@ public class Cube extends Mesh {
         V[4][X], V[4][Y], V[4][Z], 0f, 1f
     };
 
-
-    private Texture mTexture;
+    private float rotationX = 0;
+    private float rotationY = 0;
 
     public Cube(Context context) {
         super(context);
 
         init(mVertices, VERTICES_DATA_STRIDE, VERTICES_DATA_POS_OFFSET, VERTICES_DATA_UV_OFFSET);
 
-        mPerInstanceParams.drawFirst = 0;
-        setupTextures(context);
+        mPerInstanceParams.firstVertexIndex = 0;
     }
-
-    private void setupTextures(Context context) {
-        //TODO Might want this as a singleton in application
-        GLESUtil.checkGlError("setupTextures");
-        TextureFactory tf = new TextureFactory(context);
-        mTexture = tf.fromResId(R.raw.robot);
-    }
-
-    float rotationX = 0;
-    float rotationY = 0;
 
     @Override
     public void bind() {
@@ -145,7 +131,7 @@ public class Cube extends Mesh {
         Matrix.rotateM(mMMatrix, 0, rotationX, 0f, 1f, 0);
 
         mPerInstanceParams.modelMatrix = mMMatrix;
-        mPerInstanceParams.textureId = mTexture.textureId;
+        mPerInstanceParams.textureId = App.mRobotTexture.textureId;
     }
 
     public void rotate(float distanceX, float distanceY) {

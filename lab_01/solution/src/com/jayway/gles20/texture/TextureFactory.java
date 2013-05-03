@@ -5,6 +5,9 @@ import android.opengl.GLES20;
 import com.jayway.gles20.util.GLESUtil;
 
 /**
+ * Automatically expands the number of texture units.
+ * Be aware that specifying the number of units you want to use is better for performance.
+ *
  * User: Andreas Nilsson, Jayway
  * Date: 2013-04-22
  */
@@ -57,10 +60,16 @@ public class TextureFactory {
         }
     }
 
-    /**
-     * Expands the texture factory with more texture units.
-     */
+    /** Expands the texture factory with more texture units. */
     private void expand(){
+        //Create new array with double size
+
+        //Copy current texture units
+
+        //Generate new texture units
+
+        //Reassign mTextures to the newly generated array
+
         throw  new RuntimeException("Not yet implemented");
     }
 }

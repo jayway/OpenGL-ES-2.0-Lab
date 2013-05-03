@@ -7,23 +7,26 @@ import android.view.MotionEvent;
 import com.jayway.opengles20.renderer.MyRenderer;
 
 /**
+ * Surface view specialized for OpenGL ES 2.0.
  * User: Andreas Nilsson, Jayway
  * Date: 2013-04-25
  */
 public class GL2SurfaceView extends GLSurfaceView {
+    private static final int GL2_VERSION = 2;
+
+    private static final int COLOR_BITS   = 8;
+    private static final int ALPHA_BITS   = 8;
+    private static final int DEPTH_BITS   = 16;
+    private static final int STENCIL_BITS = 0;
 
     private final MyRenderer mRenderer;
-    private GestureDetector mDetector;
+    private final GestureDetector mDetector;
 
     public GL2SurfaceView(Context context) {
         super(context);
 
-        setEGLContextClientVersion(2);
-        setEGLConfigChooser(true);
-        setEGLConfigChooser(8, 8, 8, 8, 24, 0);
-//        GLES20.glEnable( GLES20.GL_DEPTH_TEST );
-//        GLES20.glDepthFunc( GLES20.GL_LEQUAL );
-//        GLES20.glDepthMask( true );
+        setEGLContextClientVersion(GL2_VERSION);
+        setEGLConfigChooser(COLOR_BITS, COLOR_BITS, COLOR_BITS, ALPHA_BITS, DEPTH_BITS, STENCIL_BITS);
 
         mRenderer = new MyRenderer(context);
         setRenderer(mRenderer);
@@ -36,28 +39,26 @@ public class GL2SurfaceView extends GLSurfaceView {
 
             @Override
             public void onShowPress(MotionEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
+                return false;
             }
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                mRenderer.scroll(distanceX, distanceY);
+                mRenderer.rotate(distanceX, distanceY);
                 return false;
             }
 
             @Override
             public void onLongPress(MotionEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
+                return false;
             }
         });
 

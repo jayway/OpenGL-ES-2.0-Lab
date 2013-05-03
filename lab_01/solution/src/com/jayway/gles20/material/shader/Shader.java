@@ -25,6 +25,7 @@ public abstract class Shader {
         mQualifiers = ShaderUtil.getAllQualifiers(mProgram);
 
         generateQualifierArrays();
+        initGLStates();
     }
 
     /**
@@ -50,8 +51,13 @@ public abstract class Shader {
         return mQualifiers;
     }
 
-    public abstract void bindPerFrame(PerFrameParams params);
+    /**
+     * Override this function to enable the different gl states you will be needing.
+     * e.g. glEnable(GL_DEPTH_TEST)
+     */
+    protected abstract void initGLStates();
 
-	public abstract void bindPerInstance(PerInstanceParams params);
+    protected abstract void bindPerFrame(PerFrameParams params);
 
+	protected abstract void bindPerInstance(PerInstanceParams params);
 }

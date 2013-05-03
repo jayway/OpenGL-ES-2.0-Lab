@@ -14,6 +14,6 @@ public class PerInstanceParams {
 	public float[] modelMatrix;
 	public int numberOfVertices;
 	public int drawMode;
-	public int drawFirst;
+	public int firstVertexIndex;
 
 }

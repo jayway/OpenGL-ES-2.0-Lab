@@ -7,15 +7,11 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
-public class GeneralUtil {
-    private static final int BYTES_PER_FLOAT = 4;
+public class ResourceManager {
 
     /**
-     * Converts an inputstream object to a java String
+     * Parses {@link InputStream} into a {@link String}
      * 
      * @param in
      * @return
@@ -38,32 +34,21 @@ public class GeneralUtil {
         return sb.toString();
     }
 
-    public static FloatBuffer createFloatBuffer(float[] array) {
-        ByteBuffer bb = ByteBuffer.allocateDirect(array.length * BYTES_PER_FLOAT);
-        bb.order(ByteOrder.nativeOrder());
 
-        FloatBuffer fb = bb.asFloatBuffer();
-        fb.put(array);
-        fb.position(0);
 
-        return fb;
-    }
-    
-    public static FloatBuffer createFloatBuffer(int noElements, int stride) {
-        ByteBuffer bb = ByteBuffer.allocateDirect(noElements * stride * BYTES_PER_FLOAT);
-        bb.order(ByteOrder.nativeOrder());
-        FloatBuffer fb = bb.asFloatBuffer();
-
-        return fb;
-    }
-
-    //TODO should throw IOException perhaps
+    /**
+     * Opens asset path and reads resource into a {@link String}
+     * @param manager
+     * @param assetsPath
+     * @return
+     */
+    //TODO should throw IOException perhaps?
     public static String stringFromResource(AssetManager manager, String assetsPath) {
         try {
             InputStream is = manager.open(assetsPath);
             return inputStreamToString(is);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load string <" + assetsPath + "> from resource", e);
+            throw new RuntimeException("Failed to load string <" + assetsPath + "> from resources", e);
         }
     }
 
@@ -71,7 +56,6 @@ public class GeneralUtil {
         try {
             stream.close();
         } catch (IOException e) {
-
         }
     }
 }

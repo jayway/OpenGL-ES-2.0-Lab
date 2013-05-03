@@ -16,7 +16,6 @@ public abstract class CommonRenderer implements Renderer {
 	private int mHeight;
 	private long mLastTime;
 	private int mFPS;
-    private float[] mClearColor = {0, 0, 0, 1};
 
 
     public CommonRenderer() {
@@ -34,26 +33,34 @@ public abstract class CommonRenderer implements Renderer {
 			Log.i(Util.LOG_TAG, "Surface created.");
 		}
 		mSurfaceCreated = true;
-		mWidth = -1;
+		mWidth  = -1;
 		mHeight = -1;
 
-        setClearColor(0, 0,0,1);
+        setClearColor(0, 0, 0, 1);
+        loadResources();
+    }
+
+    /**
+     * Called when context is created. Which also occur when context is lost.
+     */
+    protected void loadResources(){
+
     }
 
     /**
      * Default clear code is black
      * @param r red
      * @param g green
-     * @param b black
+     * @param b blue
      * @param a alpha
      */
-    public void setClearColor(float r, float g, float b, float a){
-        mClearColor = new float[]{r, g, b, a};
-        GLES20.glClearColor(mClearColor[0], mClearColor[1], mClearColor[2], mClearColor[3]);
+    public void setClearColor(final float r, final float g, final float b, final float a){
+        GLES20.glClearColor(r, g, b, a);
     }
 
 	@Override
 	public void onSurfaceChanged(GL10 notUsed, int width, int height) {
+        Log.i(Util.LOG_TAG, "Surface change");
 		if (width == mWidth && height == mHeight) {
 			if (Util.DEBUG) {
 				Log.i(Util.LOG_TAG, "Surface changed but already handled.");
