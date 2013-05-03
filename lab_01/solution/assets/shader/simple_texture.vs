@@ -8,5 +8,5 @@ varying vec2 texCoord;
 void main()
 {
     texCoord = aTextureCoord;
-    gl_Position = vec4(aPosition, 1.0) * uMVPMatrix;
+    gl_Position =  uMVPMatrix * vec4(aPosition, 1.0);
 }
