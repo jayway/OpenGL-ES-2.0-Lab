@@ -127,15 +127,18 @@ public class Cube extends Mesh {
 //        Matrix.rotateM(mMMatrix, 0, 45, 0f, 1f, 0);
 //        Matrix.setRotateM(mMMatrix, 0f, angle, 0f, 1f, 0);
 
-        Matrix.setRotateM(mMMatrix, 0, rotationY, 0f, 0f, 1);
+        Matrix.setIdentityM(mMMatrix, 0);
+        Matrix.setRotateM(mMMatrix, 0, rotationY, 1f, 0f, 0);
         Matrix.rotateM(mMMatrix, 0, rotationX, 0f, 1f, 0);
+
+//        Matrix.rotateM(mMMatrix, 0, angle, 0f, 0f, 1f);
 
         mPerInstanceParams.modelMatrix = mMMatrix;
         mPerInstanceParams.textureId = App.mRobotTexture.textureId;
     }
 
     public void rotate(float distanceX, float distanceY) {
-        rotationX += distanceX;
-        rotationY += distanceY;
+        rotationX -= distanceX;
+        rotationY -= distanceY;
     }
 }

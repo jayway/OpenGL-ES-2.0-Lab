@@ -1,11 +1,14 @@
 package com.jayway.gles20.material.shader;
 
+import android.opengl.Matrix;
+
 import com.jayway.gles20.qualifier.Qualifier;
 import com.jayway.gles20.renderer.PerFrameParams;
 import com.jayway.gles20.renderer.PerInstanceParams;
 import com.jayway.gles20.util.GLESUtil;
 
 import static android.opengl.GLES20.*;
+import static android.opengl.GLES20.glUniformMatrix4fv;
 
 /**
  * Simple basic shader who only renders with a solid COLOR.
@@ -21,6 +24,8 @@ public class SimpleTextureShader extends Shader{
     protected void initGLStates() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
+        glClearDepthf(1f);
+        glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         GLESUtil.checkGlError("SimpleTextureShader >> set gl states");
     }

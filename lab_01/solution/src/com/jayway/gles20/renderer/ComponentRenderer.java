@@ -42,21 +42,28 @@ public class ComponentRenderer extends CommonRenderer {
         mCamera.bind(mPerFrameParams);
         mShader.bindPerFrame(mPerFrameParams);
 
+        // TODO for each is usually slower than normal for loop
         for (Mesh mesh : mDatabase) {
             mesh.bind();
 
             //TODO optimize by direct access instead of a getter?
             PerInstanceParams mPerInstanceParams = mesh.getParam();
 
-            //Compute MVP Matrix
-            Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0, mPerInstanceParams.modelMatrix, 0, mPerFrameParams.viewProjMatrix, 0);
+            // MVP matrix calculation
+            // P*(V*M) ===============================================================================================================
+
+            // Calculate ModelView Matrix
+            Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0, mPerFrameParams.viewMatrix, 0, mPerInstanceParams.modelMatrix,0);
+
+            // Calculate ModelViewProjection Matrix
+            Matrix.multiplyMM(mPerInstanceParams.MVPMatrix, 0, mPerFrameParams.projMatrix, 0, mPerInstanceParams.MVPMatrix , 0);
+
+            // ========================================================================================================================
 
             mShader.bindPerInstance(mPerInstanceParams);
 
             //Draw Mesh.
-            glDrawArrays(mPerInstanceParams.drawMode,
-                         mPerInstanceParams.firstVertexIndex,
-                         mPerInstanceParams.numberOfVertices);
+            glDrawArrays(mPerInstanceParams.drawMode, mPerInstanceParams.firstVertexIndex, mPerInstanceParams.numberOfVertices);
         }
     }
 
